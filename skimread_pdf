@@ -1,0 +1,46 @@
+#!/bin/bash
+set -eou pipefail
+
+if [ "$#" -eq  "0" ]
+   then
+     echo "Please supply input pdf"
+fi
+
+out="/tmp"
+man=False
+
+for arguments in "$@"; do
+	shift
+	case "$arguments" in
+		"--help") set -- "$@" "-h";;
+		"--man") set -- "$@" "-m";;
+		"--out") set -- "$@" "-o";;
+		*)	set -- "$@" "$arguments";;
+	esac
+done
+
+while getopts :hmo: arg; do
+	case $arg in
+		h ) echo "$0 usage: $0 [options] in.pdf"
+			echo "optional:"
+			echo "	-m, --man	[enter vim before speedread]"
+			echo "	-o, --out	[outdir for .txt files]"
+			exit 1;;
+		o ) out=$OPTARG;;
+		m ) man=True;;
+	esac
+done
+shift $(($OPTIND -1))
+
+tmp="${out}/$(basename $1 .pdf).txt"
+filtered="${out}/$(basename ${tmp} .txt)_filtered.txt"
+echo "converting pdf to txt"
+pdf2txt.py $1 -o "${tmp}"
+echo "cleaning txt"
+clean_pdf2txt.py ${tmp} -o ${out} 
+rm ${tmp}
+if [ ${man} = True ];
+then
+	vim ${filtered}
+fi
+cat ${filtered} | speedread -w 300
