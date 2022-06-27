@@ -1,0 +1,3 @@
+[submodule "speedread"]
+	path = speedread
+	url = https://github.com/pasky/speedread
