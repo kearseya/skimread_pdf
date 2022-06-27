@@ -6,6 +6,7 @@ Terrible way to read a paper, wouldn't recommend
 ```
 sudo apt install vim
 pip install pdf2txt
+git clone --recursive https://github.com/kearseya/skimread_pdf.git
 # add skimread_pdf, clean_pdf2txt.py, speedread to path (however you wanna do it)
 cp speedread/speedread ~/.local/bin
 cp clean_pdf2txt.py ~/.local/bin
